@@ -1,0 +1,310 @@
+.stake-view {
+    width: 89%;
+    max-width: 833px;
+    margin: auto;
+    background-color: rgba(255, 255, 255, 0.031);
+
+    border-radius: 4px;
+    padding: 10px;
+
+    .stake-card {
+        position: relative;
+        z-index: 2;
+
+        @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+            backdrop-filter: blur(40px);
+        }
+
+        /* slightly transparent fallback for Firefox (not supporting backdrop-filter) */
+        @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+        }
+
+        border-radius: 4px;
+        padding: 20px;
+        width: 100%;
+
+        .stake-card-grid {
+            margin: 0;
+            width: 100%;
+        }
+
+        .stake-card-header {
+            .stake-card-header-title {
+                font-family: Montserrat Bold;
+                font-weight: bold;
+                font-size: 20px;
+                color: #ffffff;
+                margin-bottom: 4px;
+            }
+            .stake-card-header-description {
+                font-family: Montserrat Light;
+                color: rgba(255, 255, 255, 0.6);
+                font-weight: 600;
+                font-size: 14px;
+            }
+        }
+
+        .stake-card-metrics {
+            display: flex;
+            width: 100%;
+            padding: 0;
+            text-align: center;
+            margin-top: 10px;
+
+            .stake-card-apy,
+            .stake-card-tvl,
+            .stake-card-index {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+
+                .stake-card-metrics-title {
+                    font-family: Montserrat Medium;
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 16px;
+                    color: rgba(255, 255, 255, 0.6);
+                    margin-bottom: 10px;
+                }
+
+                .stake-card-metrics-value {
+                    font-family: Montserrat;
+                    font-style: normal;
+                    font-size: 24px;
+                    line-height: 29px;
+                    color: #ffffff;
+                }
+            }
+        }
+
+        .stake-card-area {
+            .stake-card-wallet-notification {
+                text-align: center;
+
+                .stake-card-wallet-connect-btn {
+                    background: rgba(255, 255, 255, 0.2);
+                    box-shadow: 0px 0px 10px rgba(44, 39, 109, 0.1);
+                    border-radius: 4px;
+                    padding: 14px 58px;
+                    cursor: pointer;
+                    margin: auto;
+                    max-width: 280px;
+                    margin-top: 20px;
+
+                    p {
+                        font-family: Montserrat SemiBold;
+                        font-weight: 600;
+                        font-size: 18px;
+                        color: #ffffff;
+                    }
+                }
+
+                .stake-card-wallet-desc-text {
+                    font-family: Montserrat Light;
+                    font-weight: 300;
+                    font-size: 14px;
+                    color: rgba(255, 255, 255, 0.6);
+                    margin-top: 10px;
+                    margin-bottom: 6px;
+                }
+            }
+
+            .stake-card-action-area {
+                width: 100%;
+                margin-top: 25px;
+
+                .stake-card-action-stage-btns-wrap {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    .stake-card-action-stage-btn {
+                        margin: 0px 30px;
+                        padding: 6px;
+                        cursor: pointer;
+                        transition: all 0.4s ease;
+
+                        p {
+                            font-family: Montserrat;
+                            font-style: normal;
+                            font-weight: 600;
+                            font-size: 18px;
+                            color: rgba(255, 255, 255, 0.6);
+                        }
+                    }
+
+                    .stake-card-action-stage-btn.active {
+                        p {
+                            color: #ffffff;
+                        }
+
+                        border-bottom: 1px solid #ffffff;
+                    }
+                }
+
+                .stake-card-action-row {
+                    display: flex;
+                    align-items: center;
+                    margin-top: 20px;
+                    .slider {
+                        color: rgba(255, 255, 255, 0.1);
+                    }
+
+                    .MuiSlider-thumb {
+                        background-color: #ffffff;
+                        height: 20;
+                        width: 20;
+                        border: 2px solid white;
+                        box-shadow: inherit;
+                    }
+                    .days-text {
+                        font-size: 14px;
+                        white-space: nowrap;
+                        font-family: Montserrat SemiBold;
+                        text-align: center;
+                        color: white;
+                        width: 60px;
+                        margin-left: 5px;
+                    }
+                    .stake-card-action-input {
+                        width: 100%;
+
+                        background: rgba(255, 255, 255, 0.1);
+
+                        border-radius: 4px;
+                        outline: none;
+
+                        .MuiOutlinedInput-input {
+                            font-family: Montserrat Medium;
+                            font-style: normal;
+                            font-weight: 500;
+                            font-size: 16px;
+                            color: rgba(255, 255, 255, 0.6);
+                            padding: 14px 20px;
+                        }
+
+                        .MuiOutlinedInput-notchedOutline {
+                        }
+
+                        .stake-card-action-input-btn {
+                            cursor: pointer;
+
+                            p {
+                                font-family: Montserrat;
+                                font-size: 16px;
+                                color: #ffffff;
+                            }
+                        }
+                    }
+
+                    .stake-card-tab-panel {
+                        min-width: 215px;
+                        margin-left: 10px;
+
+                        .stake-card-tab-panel-btn {
+                            background: rgba(255, 255, 255, 0.2);
+                            box-shadow: 0px 0px 10px rgba(44, 39, 109, 0.1);
+                            border-radius: 4px;
+                            padding: 14px 0px;
+                            cursor: pointer;
+                            text-align: center;
+
+                            p {
+                                font-family: Montserrat;
+                                font-weight: 600;
+                                font-size: 16px;
+                                color: #ffffff;
+                            }
+                        }
+                    }
+                }
+
+                .stake-card-action-help-text {
+                    margin-top: 10px;
+
+                    p {
+                        font-family: Montserrat Light;
+                        font-style: normal;
+                        font-weight: 300;
+                        font-size: 14px;
+                        line-height: 17px;
+                        text-align: center;
+                        color: rgba(255, 255, 255, 0.6);
+                    }
+                }
+            }
+
+            .stake-user-data {
+                justify-content: center;
+                margin: auto;
+                padding: 0 5px;
+                margin-top: 30px;
+            }
+        }
+    }
+}
+
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 0px;
+
+    .data-row-name {
+        font-family: Montserrat Medium;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 15px;
+        color: #ffffff;
+    }
+    .data-row-value {
+        font-family: Montserrat;
+        font-size: 15px;
+        line-height: 17px;
+        color: #ffffff;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .stake-view {
+        .stake-card {
+            .stake-card-metrics {
+                .stake-card-apy,
+                .stake-card-tvl,
+                .stake-card-index {
+                    align-items: flex-start;
+                }
+
+                .stake-card {
+                    width: 50%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+            }
+
+            .stake-card-area {
+                .stake-card-action-area {
+                    .stake-card-action-row {
+                        flex-direction: column;
+                        .stake-card-tab-panel {
+                            margin-left: 0;
+                            margin-top: 20px;
+                            min-width: none;
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1240px) {
+    .stake-view {
+        width: 100%;
+    }
+}

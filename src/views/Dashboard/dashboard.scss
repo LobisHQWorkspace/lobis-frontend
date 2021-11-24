@@ -1,0 +1,56 @@
+.dashboard-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+
+    width: 89%;
+    max-width: 833px;
+    margin: auto;
+
+    .dashboard-infos-wrap {
+        .dashboard-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+
+            position: relative;
+            z-index: 2;
+
+            @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+                background: rgba(255, 255, 255, 0.04);
+                backdrop-filter: blur(100px);
+            }
+
+            /* slightly transparent fallback for Firefox (not supporting backdrop-filter) */
+            @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+                background: rgba(255, 255, 255, 0.04);
+            }
+
+            border-radius: 4px;
+            padding: 13px 0;
+
+            .card-title {
+                font-family: Montserrat Medium;
+                font-weight: 400;
+                font-size: 16px;
+                color: rgba(255, 255, 255, 0.6);
+                margin-bottom: 10px;
+            }
+
+            .card-value {
+                font-family: Montserrat;
+                font-size: 24px;
+                color: #ffffff;
+            }
+
+            .card-value-small {
+                font-family: Montserrat;
+                font-size: 24px;
+                color: #ffffff;
+            }
+        }
+    }
+}
