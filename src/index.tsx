@@ -5,6 +5,8 @@ import { Provider } from "react-redux";
 import { Web3ContextProvider } from "./hooks";
 import { SnackbarProvider } from "notistack";
 import SnackMessage from "./components/Messages/snackbar";
+import { ThemeProvider } from "@material-ui/core";
+import { theme } from "./theme/theme";
 
 ReactDOM.render(
     <SnackbarProvider
@@ -18,7 +20,9 @@ ReactDOM.render(
     >
         <Provider store={store}>
             <Web3ContextProvider>
-                <Root />
+                <ThemeProvider theme={theme}>
+                    <Root />
+                </ThemeProvider>
             </Web3ContextProvider>
         </Provider>
     </SnackbarProvider>,
