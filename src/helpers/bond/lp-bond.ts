@@ -3,9 +3,9 @@ import { Bond, BondOpts } from "./bond";
 import { BondType } from "./constants";
 import { Networks } from "../../constants/blockchain";
 import { StaticJsonRpcProvider } from "@ethersproject/providers";
-
+import { getLPWorthInOhm } from "..";
 import addresses from "../../constants/addresses-list";
-
+import { BigNumber } from "@ethersproject/bignumber";
 // Keep all LP specific fields/logic within the LPBond class
 export interface LPBondOpts extends BondOpts {
     readonly reserveContractAbi: ContractInterface;
@@ -27,7 +27,11 @@ export class LPBond extends Bond {
     }
 
     async getTreasuryBalance(networkID: Networks, provider: StaticJsonRpcProvider) {
-        return 0;
+        const token = this.getContractForReserve(networkID, provider);
+        const tokenAmount = await token.balanceOf(addresses.treasury);
+        const ohmAmount = await getLPWorthInOhm(tokenAmount, provider);
+        const price = this.getTokenPrice();
+        return ohmAmount * price;
     }
 
     public getTokenAmount(networkID: Networks, provider: StaticJsonRpcProvider) {
@@ -48,7 +52,7 @@ export class LPBond extends Bond {
     }
 
     private toTokenDecimal(isLobi: boolean, reserve: number) {
-        return isLobi ? reserve / Math.pow(10, 9) : reserve / Math.pow(10, 18);
+        return isLobi ? reserve / Math.pow(10, 9) : reserve / Math.pow(10, 9);
     }
 }
 

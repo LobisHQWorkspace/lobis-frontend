@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Social from "./social";
 import StakeIcon from "../../../assets/icons/stake.svg";
@@ -7,7 +7,10 @@ import LobisIcon from "../../../assets/icons/lobis-icon.svg";
 import DashboardIcon from "../../../assets/icons/dashboard.svg";
 import GovernanceIcon from "../../../assets/icons/governance.svg";
 import CalculatorIcon from "../../../assets/icons/calculator.svg";
+import ForumIcon from "../../../assets/icons/forum.svg";
+import EnvelopeIcon from "../../../assets/icons/envelope.svg";
 import SushiIcon from "../../../assets/icons/sushi.svg";
+import VoteIcon from "../../../assets/icons/vote.svg";
 import { trim, shorten } from "../../../helpers";
 import { useAddress } from "../../../hooks";
 import useBonds from "../../../hooks/bonds";
@@ -17,13 +20,60 @@ import "./drawer-content.scss";
 import DocsIcon from "../../../assets/icons/stake.svg";
 import classnames from "classnames";
 import { DEFAULD_NETWORK } from "../../../constants";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { IReduxState } from "../../../store/slices/state.interface";
+import { BigNumber } from "@ethersproject/bignumber";
+import addresses0 from "../../../constants/airdrop.json";
+import addresses1 from "../../../constants/airdrop1.json";
+import getClaimed from "src/helpers/get-claimed";
+import { useWeb3Context } from "src/hooks/web3";
+import { calcBondDetails } from "../../../store/slices/bond-slice";
+
 function NavContent() {
     const [isActive] = useState();
-
+    const dispatch = useDispatch();
+    const { provider, chainID } = useWeb3Context();
     const { bonds } = useBonds();
+    const [airdropButton, setAirdropButton] = useState(false);
+    const [merkleIndex, setMerkleIndex] = useState(9999);
 
+    const address: string = useAddress();
+
+    // merkle 0
+    useEffect(() => {
+        (async () => {
+            const claims: { [key: string]: any } = { ...addresses0.claims };
+
+            if (Object.keys(addresses0.claims).indexOf(address) !== -1) {
+                const result = await getClaimed(0, claims[address].index, provider);
+                setMerkleIndex(0);
+                !result && setAirdropButton(true);
+            }
+        })();
+    }, []);
+
+    // merkle 1
+    useEffect(() => {
+        (async () => {
+            const claims: { [key: string]: any } = { ...addresses1.claims };
+
+            if (Object.keys(addresses1.claims).indexOf(address) !== -1) {
+                const result = await getClaimed(1, claims[address].index, provider);
+                setMerkleIndex(1);
+                !result && setAirdropButton(true);
+            }
+        })();
+    }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            bonds.map(bond => {
+                dispatch(calcBondDetails({ bond, value: null, provider: provider, networkID: chainID }));
+            });
+            console.log("dispatching bond");
+        }, 20000);
+        return () => clearInterval(interval);
+    }, []);
     const networkID = useSelector<IReduxState, number>(state => {
         return (state.app && state.app.networkID) || DEFAULD_NETWORK;
     });
@@ -45,10 +95,10 @@ function NavContent() {
     return (
         <div className="dapp-sidebar">
             <div className="branding-header">
-                <Link href="https://app.lobis.finance" target="_blank">
+                <Link href="https://lobis.finance" target="_blank">
                     <img alt="" src={LobisIcon} width={40} />
                 </Link>
-                <Link href="https://app.lobis.finance" target="_blank">
+                <Link href="https://lobis.finance" target="_blank">
                     <h2>LOBIS</h2>
                 </Link>
             </div>
@@ -68,18 +118,23 @@ function NavContent() {
                             <p>Dashboard</p>
                         </div>
                     </Link>
-
                     <Link
                         component={NavLink}
-                        to="/governance"
+                        to="/vote"
                         isActive={(match: any, location: any) => {
-                            return checkPage(location, "governance");
+                            return checkPage(location, "vote");
                         }}
                         className={classnames("button-dapp-menu", { active: isActive })}
                     >
                         <div className="dapp-menu-item">
-                            <img alt="" src={GovernanceIcon} />
-                            <p>Governance</p>
+                            <img alt="" src={VoteIcon} />
+                            <p>Vote</p>
+                        </div>
+                    </Link>
+                    <Link href="https://forum.lobis.finance" target="_blank" className={classnames("button-dapp-menu", { active: isActive })}>
+                        <div className="dapp-menu-item">
+                            <img alt="" src={ForumIcon} />
+                            <p>Forum</p>
                         </div>
                     </Link>
 
@@ -148,6 +203,30 @@ function NavContent() {
                         <div className="dapp-menu-item">
                             <img alt="" src={SushiIcon} />
                             <p>Buy LOBIS On Sushi</p>
+                        </div>
+                    </Link>
+                    {airdropButton && (
+                        <Link
+                            component={NavLink}
+                            to={merkleIndex === 0 ? "/airdrop" : "/airdrop-2"}
+                            isActive={(match: any, location: any) => {
+                                return checkPage(location, "airdrop");
+                            }}
+                            className={classnames("button-dapp-menu", { active: isActive })}
+                        >
+                            <div className="dapp-menu-item">
+                                <p>Claim Your Airdrop!</p>
+                            </div>
+                        </Link>
+                    )}
+                    <Link
+                        href="https://mirror.xyz/0x05Ce51f0B583D3666222f5803C51b1De8D4B35C2/Hrl-UnGbF3ep_QeU6rti-3ZKXvZDEDvFXa6-9HCSvW4"
+                        target="_blank"
+                        className={classnames("button-dapp-menu", { active: isActive })}
+                    >
+                        <div className="dapp-menu-item">
+                            <img alt="" src={EnvelopeIcon} />
+                            <p>Second Envelope</p>
                         </div>
                     </Link>
                 </div>

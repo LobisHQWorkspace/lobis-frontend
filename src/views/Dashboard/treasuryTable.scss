@@ -1,0 +1,35 @@
+.treasury-balance-view-card-table {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+    margin: auto;
+    padding: 10px;
+
+    .treasury-balance-view-card-table-title {
+        color: rgba(255, 255, 255, 0.6);
+        font-family: Montserrat SemiBold;
+        font-weight: 400;
+        font-size: 16px;
+    }
+
+    .token-name-title {
+        font-family: Montserrat Light;
+        font-weight: 600;
+        font-size: 16px;
+        color: #ffffff;
+        border-bottom: none;
+    }
+
+    .treasury-balance-view-card-table-title-footer {
+        color: rgba(255, 255, 255, 0.6);
+        font-family: Montserrat SemiBold;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 17px;
+        border-bottom: none;
+        border-top: 1px solid white;
+    }
+}

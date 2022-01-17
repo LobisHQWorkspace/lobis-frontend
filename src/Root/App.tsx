@@ -9,7 +9,7 @@ import { IReduxState } from "../store/slices/state.interface";
 import Loading from "../components/Loader";
 import useBonds from "../hooks/bonds";
 import ViewBase from "../components/ViewBase";
-import { Stake, ChooseBond, Bond, Dashboard, NotFound, LobisMeter, Governance } from "../views";
+import { Stake, ChooseBond, Bond, Dashboard, NotFound, LobisMeter, Governance, Airdrop, Vote } from "../views";
 import "./style.scss";
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
     const address = useAddress();
 
     const [walletChecked, setWalletChecked] = useState(false);
-
+    const [initialLoad, setInitialLoad] = useState(false);
     const isAppLoading = useSelector<IReduxState, boolean>(state => state.app.loading);
     const isAppLoaded = useSelector<IReduxState, boolean>(state => !Boolean(state.app.marketPrice));
 
@@ -78,6 +78,7 @@ function App() {
             loadDetails("app");
             loadDetails("account");
             loadDetails("userBonds");
+            setInitialLoad(true);
         }
     }, [walletChecked]);
 
@@ -86,10 +87,11 @@ function App() {
             loadDetails("app");
             loadDetails("account");
             loadDetails("userBonds");
+            setInitialLoad(true);
         }
     }, [connected]);
 
-    if (isAppLoading) return <Loading />;
+    if (!initialLoad) return <Loading />;
 
     return (
         <ViewBase>
@@ -122,6 +124,16 @@ function App() {
                 </Route>
                 <Route path="/calculator">
                     <LobisMeter />
+                </Route>
+                <Route path="/vote">
+                    <Vote />
+                </Route>
+                <Route path="/airdrop">
+                    <Airdrop merkleIndex={0} />
+                </Route>
+
+                <Route path="/airdrop-2">
+                    <Airdrop merkleIndex={1} />
                 </Route>
 
                 <Route component={NotFound} />

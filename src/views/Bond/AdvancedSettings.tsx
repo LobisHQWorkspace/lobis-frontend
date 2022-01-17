@@ -46,16 +46,6 @@ function AdvancedSettings({ open, handleClose, slippage, recipientAddress, onRec
                             <p className="text-bond-desc">Transaction may revert if price changes by more than slippage %</p>
                         </div>
                     </FormControl>
-
-                    <InputLabel htmlFor="recipient">
-                        <p className="input-lable">Recipient Address</p>
-                    </InputLabel>
-                    <FormControl variant="outlined" color="primary" fullWidth>
-                        <OutlinedInput className="bond-input" id="recipient" value={recipientAddress} onChange={onRecipientAddressChange} type="text" />
-                        <div className="help-text">
-                            <p className="text-bond-desc">Choose recipient address. By default, this is your currently connected address</p>
-                        </div>
-                    </FormControl>
                 </Box>
             </Paper>
         </Modal>

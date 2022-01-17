@@ -49,6 +49,9 @@ function Stake() {
     const stakingTVL = useSelector<IReduxState, number>(state => {
         return state.app.stakingTVL;
     });
+    const lobiPrice = useSelector<IReduxState, number>(state => {
+        return state.app.marketPrice;
+    });
 
     const pendingTransactions = useSelector<IReduxState, IPendingTxn[]>(state => {
         return state.pendingTransactions;
@@ -80,11 +83,14 @@ function Stake() {
 
     const hasAllowance = useCallback(
         token => {
-            if (token === "lobi") return stakeAllowance > 0;
-            if (token === "sLobi") return unstakeAllowance > 0;
+            if (token === "lobi") {
+                return stakeAllowance > 0;
+            } else if (token === "sLobi") {
+                return unstakeAllowance > 0;
+            }
             return 0;
         },
-        [stakeAllowance],
+        [stakeAllowance, unstakeAllowance],
     );
 
     const changeView = (newView: number) => () => {
@@ -96,6 +102,8 @@ function Stake() {
     const trimmedStakingAPY = trim(stakingAPY * 100, 1);
     const stakingRebasePercentage = trim(stakingRebase * 100, 4);
     const nextRewardValue = trim((Number(stakingRebasePercentage) / 100) * Number(trimmedSLobiBalance), 6);
+    const stakingAmountInUSD = Number(sTokenBalance) * lobiPrice;
+    const nextRewardValueInUSD = (Number(stakingRebasePercentage) / 100) * Number(trimmedSLobiBalance) * lobiPrice;
 
     return (
         <div className="stake-view">
@@ -293,6 +301,23 @@ function Stake() {
                                                 )}
                                             </p>
                                         </div>
+                                        <div className="data-row">
+                                            <p className="data-row-name">$ Amount</p>
+                                            <p className="data-row-value">
+                                                {isAppLoading ? (
+                                                    <Skeleton width="80px" />
+                                                ) : (
+                                                    <>
+                                                        {new Intl.NumberFormat("en-US", {
+                                                            style: "currency",
+                                                            currency: "USD",
+                                                            maximumFractionDigits: 0,
+                                                            minimumFractionDigits: 0,
+                                                        }).format(stakingAmountInUSD)}
+                                                    </>
+                                                )}
+                                            </p>
+                                        </div>
 
                                         <div className="data-row">
                                             <p className="data-row-name">Next Reward Amount</p>
@@ -302,6 +327,23 @@ function Stake() {
                                                 ) : (
                                                     <>
                                                         {nextRewardValue} {STAKING_TOKEN_NAME}
+                                                    </>
+                                                )}
+                                            </p>
+                                        </div>
+                                        <div className="data-row">
+                                            <p className="data-row-name">Next Reward Amount in $</p>
+                                            <p className="data-row-value">
+                                                {isAppLoading ? (
+                                                    <Skeleton width="80px" />
+                                                ) : (
+                                                    <>
+                                                        {new Intl.NumberFormat("en-US", {
+                                                            style: "currency",
+                                                            currency: "USD",
+                                                            maximumFractionDigits: 0,
+                                                            minimumFractionDigits: 0,
+                                                        }).format(nextRewardValueInUSD)}
                                                     </>
                                                 )}
                                             </p>
