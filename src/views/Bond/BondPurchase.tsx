@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, OutlinedInput, InputAdornment, Slide, FormControl } from "@material-ui/core";
+import { lobiOHMBond } from "src/helpers/bond";
 import { shorten, trim, prettifySeconds } from "../../helpers";
 import { changeApproval, bondAsset, calcBondDetails } from "../../store/slices/bond-slice";
 import { useWeb3Context } from "../../hooks";
@@ -130,6 +131,7 @@ function BondPurchase({ bond, slippage, recipientAddress }: IBondPurchaseProps) 
                         onChange={e => setQuantity(e.target.value)}
                         labelWidth={0}
                         className="bond-input"
+                        disabled={bond.name === lobiOHMBond.name}
                         endAdornment={
                             <InputAdornment position="end">
                                 <div className="stake-input-btn" onClick={setMax}>
@@ -139,7 +141,11 @@ function BondPurchase({ bond, slippage, recipientAddress }: IBondPurchaseProps) 
                         }
                     />
                 </FormControl>
-                {hasAllowance() ? (
+                {bond.name === lobiOHMBond.name ? (
+                    <div className="transaction-button bond-disabled-btn">
+                        <p>{txnButtonText(pendingTransactions, "bond_" + bond.name, "Disabled Bond")}</p>
+                    </div>
+                ) : hasAllowance() ? (
                     Number(quantity) > bond.balance ? (
                         <div className="transaction-button bond-disabled-btn">
                             <p>{txnButtonText(pendingTransactions, "bond_" + bond.name, "Not Enough Balance")}</p>

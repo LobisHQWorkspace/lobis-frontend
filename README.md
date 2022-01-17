@@ -1,5 +1,9 @@
 # [Lobis Frontend](https://app.lobis.finance/)
 
+Front-end of Lobis.
+
+## 🔧 Setting up Local Development
+
 Required:
 
 -   [Node v14](https://nodejs.org/download/release/latest-v14.x/)

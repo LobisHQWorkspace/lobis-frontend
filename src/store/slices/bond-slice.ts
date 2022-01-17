@@ -1,4 +1,4 @@
-import { ethers, constants } from "ethers";
+import { ethers, constants, BigNumber } from "ethers";
 import { getMarketPrice, getLPWorthInOhm, getTokenPrice } from "../../helpers";
 import { calculateUserBondDetails, getBalances } from "./account-slice";
 import { fetchPendingTxns, clearPendingTxn } from "./pending-txns-slice";
@@ -9,7 +9,7 @@ import { Bond } from "../../helpers/bond/bond";
 import { Networks } from "../../constants/blockchain";
 import { RootState } from "../store";
 import { Contract } from "ethers";
-import { crvBond, fxsBond, lobiOHMBond } from "../../helpers/bond";
+import { angleBond, crvBond, fxsBond, gOhmBond, lobiOHMBond, tokeBond } from "../../helpers/bond";
 import { error, warning, success, info } from "../slices/messages-slice";
 import { messages } from "../../constants/messages";
 import { getGasPrice } from "../../helpers/get-gas-price";
@@ -125,18 +125,32 @@ export const calcBondDetails = createAsyncThunk("bonding/calcBondDetails", async
     try {
         if (bondContract.bondPriceInUSD) {
             bondPrice = await bondContract.bondPriceInUSD();
+            if (bond.name === "toke") {
+                const tokePrice = getTokenPrice("TOKE");
+                bondPrice = await bondContract.bondPrice();
+                bondPrice = (tokePrice * bondPrice) / 1e4;
+            } else if (bond.name === "angle") {
+                const anglePrice = getTokenPrice("ANGLE");
+                bondPrice = await bondContract.bondPrice();
+                bondPrice = (anglePrice * bondPrice) / 1e4;
+            } else if (bond.name === "gohm") {
+                const gOhmPrice = getTokenPrice("GOHM");
+                bondPrice = await bondContract.bondPrice();
+                bondPrice = (gOhmPrice * bondPrice) / 1e4;
+            }
         }
 
         marketPrice = marketPrice * getTokenPrice("OHM");
 
         if (bond.name === lobiOHMBond.name) {
             bondPrice = await bondContract.bondPrice();
-
             const ohmPrice = getTokenPrice("OHM");
             bondPrice = ((bondPrice * ohmPrice) / 1e4) * 2;
             bondDiscount = (marketPrice - bondPrice) / bondPrice;
-        } else {
+        } else if (bond.name !== "toke" && bond.name !== "angle" && bond.name !== "gohm") {
             bondDiscount = (marketPrice * Math.pow(10, 18) - bondPrice) / bondPrice;
+        } else {
+            bondDiscount = (marketPrice - bondPrice) / bondPrice;
         }
     } catch (e) {
         console.log("error getting bondPriceInUSD", e);
@@ -165,22 +179,39 @@ export const calcBondDetails = createAsyncThunk("bonding/calcBondDetails", async
         const ohmPrice = getTokenPrice("OHM");
         purchased = lpWorth * ohmPrice;
     } else {
+        let added = BigNumber.from(0);
         let tokenName = "CRV";
 
         if (bond.name === crvBond.name) {
             tokenName = "CRV";
         }
+        if (bond.name === angleBond.name) {
+            tokenName = "ANGLE";
+        }
+        if (bond.name === gOhmBond.name) {
+            tokenName = "GOHM";
+        }
 
         if (bond.name === fxsBond.name) {
             tokenName = "FXS";
+            const veFXSContract = new ethers.Contract(addresses.veFXS, abis.veFXS, provider);
+            const fraxLockedBalance = (await veFXSContract.locked(addresses.fxsAllocator)).amount;
+            added = fraxLockedBalance;
         }
 
-        purchased = purchased / Math.pow(10, 18);
+        if (bond.name === tokeBond.name) {
+            tokenName = "TOKE";
+            const tokeStakeContract = new ethers.Contract(addresses.tokeStake, abis.TokeStake, provider);
+            const tokeStakeBalance = await tokeStakeContract.balanceOf(addresses.multisig);
+            added = tokeStakeBalance;
+        }
+
+        purchased = purchased.add(added) / Math.pow(10, 18);
         const tokenPrice = getTokenPrice(tokenName);
         purchased = purchased * tokenPrice;
     }
 
-    if (!bond.isLP) {
+    if (!bond.isLP && bond.name !== "toke" && bond.name !== "angle" && bond.name !== "gohm") {
         bondPrice = bondPrice / 1e18;
     }
 
@@ -236,6 +267,9 @@ export const bondAsset = createAsyncThunk("bonding/bondAsset", async ({ value, a
         dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
         return;
     } catch (err: any) {
+        if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
+            err.message = "You may not have enough ETH to make transaction on Lobis please add funds";
+        }
         if (err.code === -32603 && err.message.indexOf("ds-math-sub-underflow") >= 0) {
             dispatch(error({ text: "You may be trying to bond more than your balance! Error code: 32603. Message: ds-math-sub-underflow", error: err }));
         } else if (err.code === -32603 && err.data && err.data.message) {

@@ -47,6 +47,9 @@ export const changeApproval = createAsyncThunk("stake/changeApproval", async ({ 
         dispatch(success({ text: messages.tx_successfully_send }));
         await approveTx.wait();
     } catch (err: any) {
+        if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
+            err.message = "You may not have enough ETH to make transaction on Lobis please add funds";
+        }
         dispatch(error({ text: messages.something_wrong, error: err.message }));
         return;
     } finally {
@@ -61,8 +64,8 @@ export const changeApproval = createAsyncThunk("stake/changeApproval", async ({ 
     return dispatch(
         fetchAccountSuccess({
             staking: {
-                lobiStake: Number(stakeAllowance),
-                sLobiUnstake: Number(unstakeAllowance),
+                lobi: Number(stakeAllowance),
+                sLobi: Number(unstakeAllowance),
             },
         }),
     );
@@ -101,7 +104,9 @@ export const changeStake = createAsyncThunk("stake/changeStake", async ({ action
         dispatch(success({ text: messages.tx_successfully_send }));
         await stakeTx.wait();
     } catch (err: any) {
-        console.log("err", err);
+        if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
+            err.message = "You may not have enough ETH to make transaction on Lobis please add funds";
+        }
         if (err.code === -32603 && err.message.indexOf("ds-math-sub-underflow") >= 0) {
             dispatch(error({ text: "You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow", error: err }));
         } else {

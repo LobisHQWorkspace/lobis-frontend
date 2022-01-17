@@ -23,7 +23,7 @@ function Footer() {
 
     return (
         <div className="landing-footer">
-            <Grid container spacing={1}>
+            <Grid container spacing={6}>
                 <Grid item xs={12} sm={3} md={3} lg={3}>
                     <div className="landing-footer-item-wrap">
                         <p className="landing-footer-item-title">TVL</p>
@@ -86,6 +86,21 @@ function Footer() {
                                     maximumFractionDigits: 0,
                                     minimumFractionDigits: 0,
                                 }).format(data.balances.fxs)
+                            )}
+                        </p>
+                    </div>
+                </Grid>
+                <Grid item xs={12} sm={3} md={3} lg={3}>
+                    <div className="landing-footer-item-wrap">
+                        <p className="landing-footer-item-title">TOKE Balance Of Treasury</p>
+                        <p className="landing-footer-item-value">
+                            {loadingData ? (
+                                <Skeleton width="180px" />
+                            ) : (
+                                new Intl.NumberFormat("en-US", {
+                                    maximumFractionDigits: 0,
+                                    minimumFractionDigits: 0,
+                                }).format(data.balances.toke)
                             )}
                         </p>
                     </div>

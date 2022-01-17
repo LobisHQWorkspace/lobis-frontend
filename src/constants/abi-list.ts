@@ -1,6 +1,9 @@
 import file from "./deploy.json";
 import ERC20 from "../abi/ERC20.json";
 import Pair from "../abi/Pair.json";
+import veFXS from "../abi/veFXS.json";
+import TokeStake from "../abi/TokeStake.json";
+import MerkleDistributor from "../abi/MerkleDistributor.json";
 const deploy = file.contracts;
 
 export default {
@@ -15,7 +18,10 @@ export default {
     crvBond: deploy.TokenBondDepositoryCRV.abi,
     fxs: deploy.LobiERC20.abi,
     fxsBond: deploy.TokenBondDepositoryFXS.abi,
-    ohmLobiBond: deploy.TokenBondDepositoryOHMLOBI.abi,
+    ohmLobiBond: deploy.TokenBondDepositoryOHMLOBI2.abi,
     erc20: ERC20.abi,
     pair: Pair,
+    merkleDistributor: MerkleDistributor,
+    veFXS: veFXS,
+    TokeStake: TokeStake,
 };

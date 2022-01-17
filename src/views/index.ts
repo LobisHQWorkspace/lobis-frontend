@@ -5,3 +5,5 @@ export { default as Dashboard } from "./Dashboard";
 export { default as NotFound } from "./404";
 export { default as LobisMeter } from "./LobisMeter";
 export { default as Governance } from "./Governance";
+export { default as Airdrop } from "./Airdrop";
+export { default as Vote } from "./Vote";

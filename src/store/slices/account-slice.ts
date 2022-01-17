@@ -61,17 +61,13 @@ export const loadAccountDetails = createAsyncThunk("account/loadAccountDetails",
     let stakeAllowance = 0;
     let unstakeAllowance = 0;
 
-    if (addresses.lobi) {
-        const lobiContract = new ethers.Contract(addresses.lobi, abis.lobi, provider);
-        lobiBalance = await lobiContract.balanceOf(address);
-        stakeAllowance = await lobiContract.allowance(address, addresses.stakingHelper);
-    }
+    const lobiContract = new ethers.Contract(addresses.lobi, abis.lobi, provider);
+    lobiBalance = await lobiContract.balanceOf(address);
+    stakeAllowance = await lobiContract.allowance(address, addresses.stakingHelper);
 
-    if (addresses.sLobi) {
-        const sLobiContract = new ethers.Contract(addresses.sLobi, abis.sLobi, provider);
-        sLobiBalance = await sLobiContract.balanceOf(address);
-        unstakeAllowance = await sLobiContract.allowance(address, addresses.staking);
-    }
+    const sLobiContract = new ethers.Contract(addresses.sLobi, abis.sLobi, provider);
+    sLobiBalance = await sLobiContract.balanceOf(address);
+    unstakeAllowance = await sLobiContract.allowance(address, addresses.staking);
 
     return {
         balances: {
