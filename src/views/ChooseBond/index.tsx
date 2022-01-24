@@ -8,6 +8,7 @@ import "./choosebond.scss";
 import { Skeleton } from "@material-ui/lab";
 import { IReduxState } from "../../store/slices/state.interface";
 import { TOKEN_NAME } from "src/constants";
+import { ReedemAll } from "./ReedemAll";
 
 function ChooseBond() {
     const { bonds } = useBonds();
@@ -25,40 +26,43 @@ function ChooseBond() {
 
     return (
         <div className="choose-bond-view">
-            {!isSmallScreen && pendingBonds.length > 0 && (
+            {((!isSmallScreen && pendingBonds.length > 0) || true) && (
                 <div className="my-bonds-view-card">
                     <div className="choose-bond-view-card-header">
                         <p className="choose-bond-view-card-title"> My Bonds</p>
                     </div>
 
-                    <Grid container item>
-                        <TableContainer className="choose-bond-view-card-table">
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell align="center">
-                                            <p className="choose-bond-view-card-table-title"></p>
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            <p className="choose-bond-view-card-table-title">Pending</p>
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            <p className="choose-bond-view-card-table-title">Claimable</p>
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            <p className="choose-bond-view-card-table-title">Vesting Time</p>
-                                        </TableCell>
-                                        <TableCell align="right"></TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {pendingBonds.map(bond => (
-                                        <MyBondTableData key={bond.name} bond={bond} />
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                    <Grid container direction="column" justifyContent="center" alignItems="center">
+                        <Grid md={12} item>
+                            <TableContainer className="choose-bond-view-card-table">
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="center">
+                                                <p className="choose-bond-view-card-table-title"></p>
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <p className="choose-bond-view-card-table-title">Pending</p>
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <p className="choose-bond-view-card-table-title">Claimable</p>
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                <p className="choose-bond-view-card-table-title">Vesting Time</p>
+                                            </TableCell>
+                                            <TableCell align="right"></TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {pendingBonds.map(bond => (
+                                            <MyBondTableData key={bond.name} bond={bond} />
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Grid>
                     </Grid>
+                    <ReedemAll />
                 </div>
             )}
 
