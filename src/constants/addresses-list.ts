@@ -6,6 +6,9 @@ export default {
     treasury: deploy.LobisTreasury.address,
     staking: deploy.LobisStaking.address,
     sLobi: deploy.StakedLobiERC20.address,
+    // wsLobi: deploy.WrappedStakedLobiERC20.address,
+    // TODO Change
+    wsLobi: "fwer",
     stakingWarmup: deploy.StakingWarmup.address,
     stakingHelper: deploy.StakingHelper.address,
     crv: "0xD533a949740bb3306d119CC777fa900bA034cd52",

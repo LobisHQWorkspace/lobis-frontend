@@ -1,15 +1,15 @@
-import { useEffect, useState, useCallback } from "react";
-import { Route, Redirect, Switch } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useAddress, useWeb3Context } from "../hooks";
-import { calcBondDetails } from "../store/slices/bond-slice";
-import { loadAppDetails } from "../store/slices/app-slice";
-import { loadAccountDetails, calculateUserBondDetails } from "../store/slices/account-slice";
-import { IReduxState } from "../store/slices/state.interface";
+import { Redirect, Route, Switch } from "react-router-dom";
 import Loading from "../components/Loader";
-import useBonds from "../hooks/bonds";
 import ViewBase from "../components/ViewBase";
-import { Stake, ChooseBond, Bond, Dashboard, NotFound, LobisMeter, Governance, Airdrop, Vote } from "../views";
+import { useAddress, useWeb3Context } from "../hooks";
+import useBonds from "../hooks/bonds";
+import { calculateUserBondDetails, loadAccountDetails } from "../store/slices/account-slice";
+import { loadAppDetails } from "../store/slices/app-slice";
+import { calcBondDetails } from "../store/slices/bond-slice";
+import { IReduxState } from "../store/slices/state.interface";
+import { Airdrop, Bond, ChooseBond, Dashboard, Governance, LobisMeter, NotFound, Stake, Vote } from "../views";
 import "./style.scss";
 
 function App() {

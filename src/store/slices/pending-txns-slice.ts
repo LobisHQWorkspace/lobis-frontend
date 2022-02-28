@@ -28,6 +28,10 @@ export const getStakingTypeText = (action: string) => {
     return action.toLowerCase() === "stake" ? "Staking LOBI" : "Unstaking sLOBI";
 };
 
+export const getWrappingTypeText = (isWrap: boolean) => {
+    return isWrap ? "Wrap sLobi" : "Unwrap wsLobi";
+};
+
 export const isPendingTxn = (pendingTransactions: IPendingTxn[], type: string) => {
     return pendingTransactions.map(x => x.type).includes(type);
 };
