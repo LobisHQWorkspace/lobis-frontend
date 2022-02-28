@@ -11,4 +11,7 @@ export const messages = {
     nothing_to_claim: "Nothing to claim",
     something_wrong: "Something went wrong",
     switch_to_avalanche: "Switch to Ethereum",
+    your_balance_update_soon: "Your balance will update soon",
+    before_wrap: "Before wrapping, enter a value.",
+    before_unwrap: "Before un wrapping, enter a value.",
 };

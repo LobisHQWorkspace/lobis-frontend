@@ -1,15 +1,12 @@
-import React from "react";
-import { ethers } from "ethers";
-import { setAll } from "../../helpers";
-
-import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
 import { JsonRpcProvider, StaticJsonRpcProvider } from "@ethersproject/providers";
-import { Bond } from "../../helpers/bond/bond";
-import { Networks } from "../../constants/blockchain";
-import { RootState } from "../store";
-
-import addresses from "../../constants/addresses-list";
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { ethers } from "ethers";
 import abis from "../../constants/abi-list";
+import addresses from "../../constants/addresses-list";
+import { Networks } from "../../constants/blockchain";
+import { setAll } from "../../helpers";
+import { Bond } from "../../helpers/bond/bond";
+import { RootState } from "../store";
 
 interface IGetBalances {
     address: string;
@@ -19,12 +16,15 @@ interface IGetBalances {
 
 interface IAccountBalances {
     balances: {
+        wsLobi: string;
         sLobi: string;
         lobi: string;
     };
 }
 
 export const getBalances = createAsyncThunk("account/getBalances", async ({ address, networkID, provider }: IGetBalances): Promise<IAccountBalances> => {
+    const wsLobiContract = new ethers.Contract(addresses.lobi, abis.sLobi, provider);
+    const wsLobiBalance = await wsLobiContract.balanceOf(address);
     const sLobiContract = new ethers.Contract(addresses.lobi, abis.sLobi, provider);
     const sLobiBalance = await sLobiContract.balanceOf(address);
     const lobiContract = new ethers.Contract(addresses.sLobi, abis.lobi, provider);
@@ -34,6 +34,7 @@ export const getBalances = createAsyncThunk("account/getBalances", async ({ addr
         balances: {
             sLobi: ethers.utils.formatUnits(sLobiBalance, "gwei"),
             lobi: ethers.utils.formatUnits(lobiBalance, "gwei"),
+            wsLobi: ethers.utils.formatUnits(wsLobiBalance, "gwei"),
         },
     };
 });
@@ -154,6 +155,7 @@ export const calculateUserBondDetails = createAsyncThunk("bonding/calculateUserB
 export interface IAccountSlice {
     bonds: { [key: string]: IUserBondDetails };
     balances: {
+        wsLobi: string;
         sLobi: string;
         lobi: string;
     };
@@ -167,7 +169,7 @@ export interface IAccountSlice {
 const initialState: IAccountSlice = {
     loading: true,
     bonds: {},
-    balances: { sLobi: "", lobi: "" },
+    balances: { sLobi: "", lobi: "", wsLobi: "" },
     staking: { lobi: 0, sLobi: 0 },
 };
 

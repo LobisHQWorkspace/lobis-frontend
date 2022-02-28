@@ -2,11 +2,12 @@ import { AppBar, Toolbar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import MenuIcon from "../../assets/icons/hamburger.svg";
-import TimeMenu from "./lobi-menu";
-import ConnectButton from "./connect-button";
-import AddressButton from "./address-button";
-import "./header.scss";
 import { DRAWER_WIDTH, TRANSITION_DURATION } from "../../constants/style";
+import AddressButton from "./address-button";
+import ConnectButton from "./connect-button";
+import "./header.scss";
+import TimeMenu from "./lobi-menu";
+import WrapButton from "./wrap-button";
 
 interface IHeader {
     handleDrawerToggle: () => void;
@@ -44,6 +45,7 @@ const useStyles = makeStyles(theme => ({
 function Header({ handleDrawerToggle, drawe }: IHeader) {
     const classes = useStyles();
     const isVerySmallScreen = useMediaQuery("(max-width: 400px)");
+    const isWrapShow = useMediaQuery("(max-width: 480px)");
 
     return (
         <div className={`${classes.topBar} ${!drawe && classes.topBarShift}`}>
@@ -54,6 +56,7 @@ function Header({ handleDrawerToggle, drawe }: IHeader) {
                     </div>
                     <div className="dapp-topbar-btns-wrap">
                         <AddressButton />
+                        {!isWrapShow && <WrapButton />}
                         {!isVerySmallScreen && <TimeMenu />}
                         <ConnectButton />
                     </div>
